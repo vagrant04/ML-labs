@@ -4,6 +4,8 @@ sys.path.append('src')
 from data_processing import PRDataProcessor
 from train import PRMergePredictor
 
+TOKEN = "your_github_token"
+
 def main():
     # 数据处理
     processor = PRDataProcessor(input_path="input")

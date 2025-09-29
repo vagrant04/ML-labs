@@ -138,23 +138,24 @@ class PRDataProcessor:
             print("无法保存数据，合并失败")
             return False
 
+def main():
+    """主函数"""
+    # 设置GitHub token以提高API限制
+    token = "your_github_token"  # 请在这里设置你的GitHub token
+    
+    # 创建并发分析器，设置最大工作线程数
+    analyzer = GitHubPRAnalyzerConcurrent(token, max_workers=3)  # 减少并发数避免速率限制
+    
+    print("Starting concurrent GitHub PR analysis for yiisoft/yii2...")
+    print("This should be faster than the sequential version...")
+    
+    # 处理10条PR
+    features = analyzer.process_all_prs_concurrent(limit=50)
+    
+    # 保存最终结果
+    analyzer.save_to_excel(features, 'input/github_concurrent.xlsx')
+    
+    print("Concurrent analysis completed!")
+
 if __name__ == "__main__":
-    # 示例使用
-    processor = PRDataProcessor()
-    
-    # 合并数据并保存
-    merged_data = processor.merge_data()
-    
-    if merged_data is not None:
-        # 显示数据基本信息
-        print("\n=== 数据概览 ===")
-        print(f"数据形状: {merged_data.shape}")
-        print(f"列名: {list(merged_data.columns)}")
-        print("\n前5行数据:")
-        print(merged_data.head())
-        
-        # 保存到文件
-        processor.save_merged_data(os.path.join("input", "merged_pr_data.xlsx"))
-    else:
-        print("数据处理失败")
-    
+    main()
